@@ -50,6 +50,16 @@ export function createElement(tag, props, ...children) {
   }
 }
 
-export function render(vdom, container) {
-  container.appendChild(createDOM(vdom));
-}
+export const render = (function () {
+  let prevDom = null;
+
+  return function (vdom, container) {
+    if (prevDom === null) {
+      prevDom = vdom;
+    } else {
+      // diff
+    }
+
+    container.appendChild(createDOM(vdom));
+  };
+})();
