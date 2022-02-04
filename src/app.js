@@ -1,14 +1,4 @@
-function createDOM(node) {
-  if (typeof node === "string") {
-    return document.createTextNode(node);
-  }
-
-  const element = document.createElement(node.tag);
-
-  node.children.map(createDOM).forEach(element.appendChild.bind(element));
-
-  return element;
-}
+import { render } from "./react";
 
 const vdom = {
   tag: "p",
@@ -25,17 +15,23 @@ const vdom = {
       children: [
         {
           tag: "li",
-          props: {},
+          props: {
+            style: "color:red",
+          },
           children: ["첫 번째 아이템"],
         },
         {
           tag: "li",
-          props: {},
+          props: {
+            style: "color:blue",
+          },
           children: ["두 번째 아이템"],
         },
         {
           tag: "li",
-          props: {},
+          props: {
+            style: "color:green",
+          },
           children: ["세 번째 아이템"],
         },
       ],
@@ -43,4 +39,4 @@ const vdom = {
   ],
 };
 
-document.querySelector("#root").appendChild(createDOM(vdom));
+render(vdom, document.querySelector("#root"));
