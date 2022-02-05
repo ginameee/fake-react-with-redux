@@ -1,3 +1,6 @@
+const hooks = [];
+const currentComponent = 0;
+
 export class Component {
   constructor(props) {
     this.props = props;
@@ -27,6 +30,17 @@ function makeProps(props, children) {
   };
 }
 
+function useState(initialValue) {
+  const position = currentComponent - 1;
+  if (!hooks[position]) {
+    hooks[position] = initialValue;
+  }
+
+  const modifier = (nextValue) => (hooks[position] = nextValue);
+
+  return [hooks[currentComponent], modifier];
+}
+
 export function createElement(tag, props, ...children) {
   props = props || {};
 
@@ -34,12 +48,15 @@ export function createElement(tag, props, ...children) {
     if (tag.prototype instanceof Component) {
       const instance = new tag(makeProps(props, children));
       return instance.render();
+    }
+
+    hooks[currentComponent] = null;
+    currentComponent++;
+
+    if (children.length > 0) {
+      return tag(makeProps(props, children));
     } else {
-      if (children.length > 0) {
-        return tag(makeProps(props, children));
-      } else {
-        return tag(props);
-      }
+      return tag(props);
     }
   } else {
     return {
